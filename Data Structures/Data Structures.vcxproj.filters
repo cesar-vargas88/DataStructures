@@ -18,13 +18,16 @@
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_stack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="_queue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="_heap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_stack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_forward_list.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

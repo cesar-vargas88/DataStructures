@@ -1,75 +1,75 @@
 #pragma once
 
-#include <assert.h> 
-
 #ifndef _STACK_H
 #define _STACK_H
+
+#include <iostream>
 
 template <class T> class _stack
 {
 public:
-	_stack(int MaxSize = 500);
-	_stack(const _stack<T> &otherStack);
+	_stack(int MaxSize = 100);
 	~_stack();
 
-	inline void push(const T &item);
-	inline T pop(void);
-	inline const T &peek(int depth) const;
-	inline bool isEmpty();
+	void push(const T &item);
+	T pop();
+	bool empty();
+	const int size();
+	const T &top();
 
-protected:
-	T *data;
-	int CurrentElementNumber;
-	const int MAX_NUM;
+private:
+
+	int Size;
+	T *Data;
+	const int MAX_SIZE;
 };
 
-template <class T> _stack<T>::_stack(int MaxSize) : MAX_NUM(MaxSize)
+template <class T> _stack<T>::_stack(int MaxSize) : MAX_SIZE(MaxSize)
 {
-	data = new T[MAX_NUM];
-	CurrentElementNumber = 0;
+	Size = 0;
+	Data = new T[MAX_SIZE];
 }
 
-template <class T> _stack<T>::_stack(const _stack<T> &otherStack) : MAX_NUM(otherStack.MAX_NUM)
+template <class T> _stack<T>::_stack::~_stack()
 {
-	data = new T[MAX_NUM];
-	CurrentElementNumber = otherStack.CurrentElementNumber;
+	delete Data;
 }
 
-template <class T> _stack<T>::~_stack()
+template <class T> void _stack<T>::push(const T &item)
 {
-	delete[] data;
+	if (Size == MAX_SIZE)
+	{
+		std::cout << "Stack overflow" << std::endl;
+		return;
+	}
+
+	Data[Size++] = item;
 }
 
-template <class T> inline void _stack<T>::push(const T &item) 
+template <class T> T _stack<T>::pop()
 {
-	// Error Check: Make sure we aren't exceeding the maximum storage space
-	assert(CurrentElementNumber < MAX_NUM);
+	if (empty())
+	{
+		std::cout << "Stack underflow" << std::endl;
+		return;
+	}
 
-	data[CurrentElementNumber++] = item;
+	return Data[--Size];
 }
 
-template <class T> inline T _stack<T>::pop(void)
+template <class T> bool _stack<T>::empty()
 {
-	// Error Check: Make sure we aren't popping from an empty Stack
-	assert(CurrentElementNumber > 0);
-
-	return data[--CurrentElementNumber];
+	return Size == 0;
 }
 
-template <class T> inline const T &_stack<T>::peek(int depth) const
+template <class T> const int _stack<T>::size()
 {
-	// Error Check: Make sure the depth doesn't exceed the number of elements
-	assert(depth < CurrentElementNumber);
-
-	return data[CurrentElementNumber - (depth + 1)];
+	return Size;
 }
 
-template <class T> inline bool _stack<T>::isEmpty()
+template <class T> const T &_stack<T>::top()
 {
-	if (CurrentElementNumber == 0)
-		return true;
-	else
-		false;
+	return Data[Size - 1];
 }
 
-#endif
+#endif // !_STACK_H

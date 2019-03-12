@@ -1,85 +1,100 @@
 #pragma once
 
-#include <assert.h> 
-
 #ifndef _QUEUE_H
 #define _QUEUE_H
 
 template <class T> class _queue
 {
 public:
-	_queue(int MaxSize = 500);
-	_queue(const _queue<T> &otherQueue);
+	_queue(int MaxSize = 100);
 	~_queue();
 
-	void enqueue(const T &item);
-	T dequeue(void);
-	inline int elementNum(void);
+	void push(const T &item);
+	const T pop();
+	const T &front();
+	const T &back();
+	bool empty();
+	const int size();
 
-protected:
-	T *data;
-	const int MAX_NUM;
-	int beginning;
-	int end;
-	int elementCount;
+private:
+
+	int Size;
+	int Front;
+	int Back;
+	T *Data;
+	const int MAX_SIZE;
 };
 
-template <class T> _queue<T>::_queue(int MaxSize) : MAX_NUM(MaxSize)
-{ 
-	data = new T[MAX_NUM + 1];
-	beginning = 0;
-	end = 0;
-	elementCount = 0;
-}
-
-template <class T>  _queue<T>::_queue(const _queue &otherQueue) : MAX_NUM(otherQueue.MAX_NUM)
+template <class T> _queue<T>::_queue(int MaxSize) : MAX_SIZE(MaxSize)
 {
-	beginning = otherQueue.beginning;
-	end = otherQueue.end;
-	elementCount = otherQueue.elementCount;
-
-	data = new T[MAX_NUM + 1];
-
-	for (int index = 0; index < MAX_NUM; index++)
-		data[index] = otherQueue.data[index];
+	Size = 0;
+	Front = 0;
+	Back = 0;
+	Data = new T[MAX_SIZE];
 }
 
 template <class T> _queue<T>::~_queue()
 {
-	delete[] data;
+	delete Data;
 }
 
-template <class T> void _queue<T>::enqueue(const T &item)
+template <class T> void _queue<T>::push(const T &item)
 {
-	// Error Check : Make sure we aren't exceeding our maximum storage space
-	assert(elementCount < MAX_NUM);
+	if (Size == MAX_SIZE)
+	{
+		std::cout << "Stack overflow" << std::endl;
+		return;
+	}
 
-	data[end++] = item;
-	++elementCount;
+	if (Front == Back)
+	{
+		Front = 0;
+		Back = 0;
+	}
 
-	// Check for wrap-around
-	if (end > MAX_NUM)
-		end -= (MAX_NUM + 1);
+	++Size;
+
+	Data[Back++] = item;
 }
 
-template <class T> T _queue<T>::dequeue(void)
+template <class T> const T _queue<T>::pop()
 {
-	// Error Check: Make sure we aren't dequeueing from an empty queue
-	assert(elementCount > 0);
+	if (empty())
+	{
+		std::cout << "Stack underflow" << std::endl;
+		return Data[Front];
+	}
 
-	T ReturnValue = data[beginning++];
-	--elementCount;
+	--Size;
 
-	// Check for wrap-around
-	if (beginning > MAX_NUM)
-		beginning -= (MAX_NUM + 1);
-
-	return ReturnValue;
+	return Data[Front++];
 }
 
-template <class T> inline int _queue<T>::elementNum(void)
+template <class T> const T &_queue<T>::front()
 {
-	return elementCount;
+	return Data[Front];
 }
 
-#endif
+template <class T> const T &_queue<T>::back()
+{
+	if (empty())
+		return Data[Front];
+
+	return Data[Back - 1];
+}
+
+template <class T> bool _queue<T>::empty()
+{
+	if (Front == Back)
+		return true;
+	else
+		return false;
+}
+
+template <class T> const int _queue<T>::size()
+{
+	return Size;
+}
+
+
+#endif // !_QUEUE_H
