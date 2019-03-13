@@ -29,6 +29,7 @@ public:
 	T returnRootKey();
 	void printChildren(const T &item);
 	T findSmallest();
+	void removeNode(const T& item);
 
 protected:
 
@@ -39,6 +40,9 @@ protected:
 	void printPostOrderPrivate(btNode<T> *node);
 	btNode<T> *returnNodePrivate(btNode<T> *node, const T &item);
 	T findSmallestPrivate(btNode<T> *node);
+	void removeNodePrivate(btNode<T> *node, const T &item);
+	void removeRootMatch();
+	void removeMatch(btNode<T> *parent, btNode<T> *match, bool left);
 
 	btNode<T> *Root;
 };
@@ -126,6 +130,19 @@ template <class T> T _bst<T>::findSmallest()
 		std::cout << "The tree is empty.";
 		return (T)-1000;
 	}
+}
+
+template <class T> void _bst<T>::removeNode(const T& item)
+{
+	if (Root != NULL)
+	{
+		if(Root->Data == item)
+			removeRootMatch();
+		else
+			removeNodePrivate(Root, item);
+	}	
+	else
+		std::cout << "The tree is empty.";
 }
 
 // Private
@@ -217,6 +234,111 @@ template <class T> T _bst<T>::findSmallestPrivate(btNode<T> *node)
 		return findSmallestPrivate(node->Left);
 	else
 		return node->Data;
+}
+
+template <class T> void _bst<T>::removeRootMatch()
+{
+	if (Root != NULL)
+	{
+		btNode<T> *deleteNode = Root;
+		T RootDate = Root->Data;
+		T smallestInRightSubTree;
+
+		if (Root->Left == NULL && Root->Right == NULL)
+		{
+			Root = NULL;
+			delete deleteNode;
+		}
+		else if (Root->Left == NULL && Root->Right != NULL)
+		{
+			Root = Root->Right;
+			deleteNode->Right = NULL;
+			delete deleteNode;
+
+			std::cout << "The root node with key " << RootDate << " was deleted. The new root contains key " << Root->Data << std::endl;
+		}
+		else if (Root->Left != NULL && Root->Right == NULL)
+		{
+			Root = Root->Left;
+			deleteNode->Left = NULL;
+			delete deleteNode;
+
+			std::cout << "The root node with key " << RootDate << " was deleted. The new root contains key " << Root->Data << std::endl;
+		}
+		else
+		{
+			smallestInRightSubTree = findSmallestPrivate(Root->Right);
+			removeNodePrivate(smallestInRightSubTree, Root);
+			Root->Data = smallestInRightSubTree;
+
+			std::cout << "The root keu containing key " << RootDate << " was overwritten with key " << Root->Data << std::endl;
+		}
+	}
+	else
+		std::cout << "Con not remove the root.The tree is empty.";
+}
+
+template <class T> void _bst<T>::removeMatch(btNode<T> *parent, btNode<T> *match, bool left)
+{
+	if (Root != NULL)
+	{
+		btNode<T> *deleteNode = Root;
+		T matchDate = match->Data;
+		T smallestInRightSubTree;
+
+		if (match->Left == NULL && match->Right == NULL)
+		{
+			deleteNode = match;
+			left == true ? parent->Left = NULL : parent->Right = NULL;
+			delete deleteNode;
+
+			std::cout << "The node containing key " << matchDate << " was removed" << std::endl;
+		}
+		if (match->Left == NULL && match->Right != NULL)
+		{
+			left == true ? parent->Left = match->Right : parent->Right = match->Right;
+			match->Right = NULL;
+			deleteNode = match;
+			delete deleteNode;
+
+			std::cout << "The node containing key " << matchDate << " was removed" << std::endl;
+		}
+		if (match->Left != NULL && match->Right == NULL)
+		{
+			left == true ? parent->Left = match->Left : parent->Right = match->Left;
+			match->Left = NULL;
+			deleteNode = match;
+			delete deleteNode;
+
+			std::cout << "The node containing key " << matchDate << " was removed" << std::endl;
+		}
+		else
+		{
+			smallestInRightSubTree = findSmallestPrivate(match->Right);
+			removeNodePrivate(smallestInRightSubTree, match);
+			match->Data = smallestInRightSubTree;
+		}
+	}
+	else
+		std::cout << "Can not remove match. The tree is empty." << std::endl;
+}
+
+template <class T> void _bst<T>::removeNodePrivate(btNode<T> *node, const T &item)
+{
+	if (item < node->Data && node->Left != NULL)
+	{
+		node->Left->Data == item ?
+			removeMatch(node, node->Left, true) :
+			removeNodePrivate(node->Data, item);
+	}
+	else if (item > node->Data && node->Right != NULL)
+	{
+		node->Right->Data == item ?
+			removeMatch(node, node->Right, true) :
+			removeNodePrivate(node->Data, item);
+	}
+	else
+		std::cout << "The tree is empty." << std::endl;
 }
 
 #endif // !
