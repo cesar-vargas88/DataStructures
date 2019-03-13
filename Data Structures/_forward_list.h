@@ -11,7 +11,7 @@ template<class T> class Node
 public:
 
 	T Data;
-	Node *Next;
+	Node<T> *Next;
 };
 
 template <class T> class _forward_list
@@ -25,6 +25,7 @@ public:
 	void append(const T &item);
 	int pop(int index);
 	const int size();
+	void reverse();
 
 protected:
 
@@ -83,4 +84,25 @@ template <class T> const int _forward_list<T>::size()
 	return Lenght;
 }
 
+template <class T> void _forward_list<T>::reverse()
+{
+	Node<T> *current = Head;
+	Node<T> *next = NULL;
+	Node<T> *prev = NULL;
+
+	while (current != NULL)
+	{
+		// Store next 
+		next = current->Next;
+
+		// Reverse current node's pointer 
+		current->Next = prev;
+
+		// Move pointers one position ahead. 
+		prev = current;
+		current = next;
+	} 
+
+	Head = prev;
+}
 #endif  // !_FORWARD_LIST_H

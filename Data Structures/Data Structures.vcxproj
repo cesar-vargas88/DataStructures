@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="_bst.h" />
     <ClInclude Include="_forward_list.h" />
     <ClInclude Include="_heap.h" />
     <ClInclude Include="_queue.h" />

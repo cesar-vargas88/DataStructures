@@ -79,6 +79,7 @@ template<class T> T *_heap<T>::sort(void)
 		// index NewArray.
 		NewArray[ElemNum] = remove();
 	}
+
 	return NewArray;
 }
 

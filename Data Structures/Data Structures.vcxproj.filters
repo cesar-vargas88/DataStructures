@@ -30,6 +30,9 @@
     <ClInclude Include="_forward_list.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="_bst.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
